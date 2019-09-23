@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>上传fcup</title>
+</head>
+<body>
+<div style="text-align: center;padding: 10px;">
+    <button id="start_upload">上传资源</button>
+    <button id="start_upload1">上传资源2</button>
+</div>
+<div id="url"></div>
+</body>
+<script src="/js/upload/jquery.min.js"></script>
+<script src="/js/upload/fcupUpload.js"></script>
+<script>
+    //domId,触发上传按钮；upShardSize 切片大小,(单次上传最大值)单位M,upMaxSize,传文件大小,单位M，不设置不限制，upType 文件上传类型
+    fcupUpload.fcupInit("start_upload","","","",function (data) {
+        var url = data+',';
+        $("#url").append(url);
+    });
+    fcupUpload.fcupInit("start_upload1","","","",function (data) {
+        var url = data+',';
+        $("#url").append(url);
+    });
+
+</script>
+
+
+</html>
