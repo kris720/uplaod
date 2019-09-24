@@ -12,8 +12,8 @@ return array(
         'charset'=>'utf8'
 	),
     'redis' => array(
-        'host' => '127.0.0.1',
-        'port' => '6379'
+        'host' => '120.25.90.135',
+        'port' => '16379'
     ),
     'redis_slave' => array(
         'host' => '120.25.90.135',

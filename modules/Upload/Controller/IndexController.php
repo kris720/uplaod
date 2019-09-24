@@ -36,14 +36,24 @@ class IndexController extends Controller
         $index = isset($_POST['file_index']) ? $_POST['file_index'] : 0; //当前片数
         $md5 = isset($_POST['file_md5']) ? $_POST['file_md5'] : 0; //文件的md5值
         $size = isset($_POST['file_size']) ? $_POST['file_size'] : null; //文件大小
+        $project = isset($_POST['project']) ? $_POST['project'] : null; //项目名称
         $info = pathinfo($name);
-        $ext = isset($info['extension']) ? $info['extension'] : '';
+        $ext = isset($info['extension']) ? $info['extension'] : '';// 文件名称
         $fileName = $md5 . '.'.$ext;//生成文件名称 用md5来给文件命名，这样可以减少冲突
-        $filePath = $_SERVER['DOCUMENT_ROOT'] . '/upload/' . $fileName;
         $sys_protocal = isset($_SERVER['SERVER_PORT']) && $_SERVER['SERVER_PORT'] == '443' ? 'https://' : 'http://'; //根据当前端口，判断是http还是https
-        $fileUrl = $sys_protocal.$_SERVER['HTTP_HOST'] . '/upload/' . $fileName;
+        if(!empty($project)){
+            $path = $_SERVER['DOCUMENT_ROOT'] . '/upload/'.$project;
+            if(!is_dir($path)){
+                mkdir($path, 0700, true);
+            }
+            $filePath = $_SERVER['DOCUMENT_ROOT'] . '/upload/'.$project.'/' . $fileName;
+            $fileUrl = $sys_protocal.$_SERVER['HTTP_HOST'] . '/upload/'.$project.'/' . $fileName;
+        }else{
+            $filePath = $_SERVER['DOCUMENT_ROOT'] . '/upload/' . $fileName;
+            $fileUrl = $sys_protocal.$_SERVER['HTTP_HOST'] . '/upload/'.$fileName;
+        }
         // 简单的判断文件类型
-        $imgarr = array('jpeg', 'jpg', 'png', 'gif', 'mp3','mp4', 'avi','ppt');
+        $imgarr = array('jpeg', 'jpg', 'png', 'gif', 'mp3','mp4', 'avi','flv','doc','xls','ppt','pdf');
         if (!in_array($ext, $imgarr)) {
             return $this->result(array('status' => "0", 'msg' => '文件类型出错'))->json()->response();
         }

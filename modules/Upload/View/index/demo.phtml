@@ -17,17 +17,24 @@
 <script src="/js/upload/jquery.min.js"></script>
 <script src="/js/upload/fcupUpload.js"></script>
 <script>
-    //domId,触发上传按钮；upShardSize 切片大小,(单次上传最大值)单位M,upMaxSize,传文件大小,单位M，不设置不限制，upType 文件上传类型
-    fcupUpload.fcupInit("start_upload","","","",function (data) {
+    //domId,upShardSize,upMaxSize,upType,serverUrl,project,fcupUploadCallback
+    //domId,触发上传按钮；
+    // upShardSize 切片大小,
+    // (单次上传最大值)单位M,upMaxSize,传文件大小,单位M，不设置不限制，
+    // upType 文件上传类型,
+    // serverUrl 环境地址 必传，（在该demo项目不传默认项目路径）
+    // project 项目名称 不传默认upload目录
+
+    fcupUpload.fcupInit("start_upload","1","2","jpg,png,gif","http://120.25.90.135:52720","demo",function (data) {
         var url = data+',';
         $("#url").append(url);
     });
-    fcupUpload.fcupInit("start_upload1","","","",function (data) {
+
+    fcupUpload.fcupInit("start_upload1","","","","","",function (data) {
         var url = data+',';
         $("#url").append(url);
     });
 
 </script>
-
 
 </html>

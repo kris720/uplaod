@@ -16,7 +16,7 @@ var fcup_upload = {
         jQuery.i2=0;//当前上传成功的序号
         jQuery.i3=1;//下片上传的序号
         jQuery.succeed = 0;
-        if (jQuery.upId && jQuery.upUrl) {
+        if (config.upId && config.upUrl) {
             jQuery.domHtml = jQuery('#' + jQuery.upId).html();
             jQuery.fcup_addFileInput();
         }
@@ -76,9 +76,9 @@ var fcup_upload = {
         var H = jQuery('#' + jQuery.upId).innerHeight();
         var html = jQuery.domHtml;
         if (C) {
-            html += '<input type="file" id="' + jQuery.upInputId + '" class="' + C + '" onchange="jQuery.fcup_upload(1,this)" style="position:absolute;left:' + Y + 'px;top:' + X + 'px;opacity:0;z-index:9999;width:' + W + 'px;height:' + H + 'px;">';
+            html += '<input type="file" id="' + jQuery.upInputId + '" class="' + C + '" onchange="jQuery.fcup_upload(1,this)" project="' + jQuery.project + '" style="position:absolute;left:' + Y + 'px;top:' + X + 'px;opacity:0;z-index:9999;width:' + W + 'px;height:' + H + 'px;">';
         } else {
-            html += '<input type="file" id="' + jQuery.upInputId + '" onchange="jQuery.fcup_upload(1,this)" style="position:absolute;left:' + Y + 'px;top:' + X + 'px;opacity:0;z-index:9999;width:' + W + 'px;height:' + H + 'px;">';
+            html += '<input type="file" id="' + jQuery.upInputId + '" onchange="jQuery.fcup_upload(1,this)" project="' + jQuery.project + '"  style="position:absolute;left:' + Y + 'px;top:' + X + 'px;opacity:0;z-index:9999;width:' + W + 'px;height:' + H + 'px;">';
         }
         jQuery('#' + jQuery.upId).html(html);
     },
@@ -90,8 +90,9 @@ var fcup_upload = {
         var obj = document.getElementById(jQuery.upInputId);
         obj.style.cssText = 'position:absolute;left:' + Y + 'px;top:' + X + 'px;opacity:0;z-index:9999;width:' + W + 'px;height:' + H + 'px;';
     },
-    fcup_upload: function (source,element) {
+    fcup_upload: function (source,element) {//source =1是新文件上传 source =“” 是分片文件上传
         var upInputId =element.id;
+        var project =$(element).attr("project");
         if(source==1){
             jQuery.i2=0;
             jQuery.i3=1;
@@ -99,6 +100,7 @@ var fcup_upload = {
         jQuery.upError = '';
         jQuery.fileMD5 = '';
         jQuery.tempFile = jQuery('#' + upInputId)[0].files[0];
+        jQuery.project = project;
         var file = jQuery.tempFile;
         if (!file) {
             return false;
@@ -177,6 +179,7 @@ var fcup_upload = {
                 form.append("file_md5", jQuery.fileMD5);
                 form.append("file_total", shardCount);
                 form.append("file_index", jQuery.i3);
+                form.append("project", jQuery.project);
                 if (jQuery.is_stop != 1){
                     xhr.open('POST', URL, true);
                     xhr.onreadystatechange = function () {
@@ -216,12 +219,13 @@ var fcup_upload = {
                     form.delete('file_md5');
                     form.delete('file_total');
                     form.delete('file_index');
+                    form.delete('project');
                 }
             }
         }
         ajaxStack(re);
         re = null,
-        file = null;
+            file = null;
     },
     get_file_md5: function (file) {
         var blobSlice = File.prototype.slice || File.prototype.mozSlice || File.prototype.webkitSlice,
