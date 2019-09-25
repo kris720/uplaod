@@ -29,6 +29,11 @@ class IndexController extends Controller
      */
     public function uploadAction()
     {
+        // 设置跨域头
+        header('Access-Control-Allow-Origin:*');
+        header('Access-Control-Allow-Methods:PUT,POST,GET,DELETE,OPTIONS');
+        header('Access-Control-Allow-Headers:x-requested-with,content-type');
+        header('Content-Type:application/json; charset=utf-8');
         $this->api();
         $file = isset($_FILES['file_data']) ? $_FILES['file_data'] : null; //分段的文件
         $name = isset($_POST['file_name']) ? $_POST['file_name'] : null; //要保存的文件名
