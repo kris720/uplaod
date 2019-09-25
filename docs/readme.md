@@ -7,29 +7,35 @@ fcupUpload上传插件是使用fcup.js，结合php 后端实现分片上传，�
 
 例如：
 <script src="/js/upload/jquery.min.js"></script>
-<script src="/js/upload/fcupUpload.js"></script>
+<script src="环境地址/js/upload/fcupUpload.js"></script>
 
 使用及参数说明
-fcupUpload.fcupInit("domId",upShardSize,"upMaxSize","upType",function (data) {
-        var url = data;
+fcupUpload.fcupInit(“upShardSize”,"upMaxSize","upType","serverUrl","project",function (data) {
+        var url = data.url;
 });
 
 参数说明：
-domId：触发上传的按钮的id名；
 upShardSize：切片大小,(单次上传最大值)单位M;
 upMaxSize：传文件大小,单位M，不设置不限制;
 upType：文件上传类型；
-回调函数中的data：是返回的上传成功后文件的路径；
+serverUrl： 环境地址 必传，（在该demo项目不传默认项目路径）;
+project 项目名称 不传默认upload目录;
+回调函数中的data：是返回的上传成功后文件的路径以及文件名；
 
 例如：
- fcupUpload.fcupInit("start_upload","","","",function (data) {
-        var url = data+',';
-        $("#url").append(url);
+
+    $(".start_upload").click(function () {
+        var click = $(this);
+        fcupUpload.fcupInit("1","2","jpg,png,gif","","demo",function (data) {
+            var info = '文件地址：'+data.url+'；文件名：'+data.name;
+            click.parent().find(".info").html(info);
+        });
 });
 
-  fcupUpload.fcupInit("start_upload1","","","",function (data) {
-        var url = data+',';
-        $("#url").append(url);
-});
-
-
+    $("#start_upload1").click(function () {
+        var click = $(this);
+        fcupUpload.fcupInit("10","","","","",function (data) {
+            var info = '文件地址'+data.url+'；文件名：'+data.name;
+            click.parent().find(".info").html(info);
+        });
+    });

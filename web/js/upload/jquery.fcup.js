@@ -16,11 +16,9 @@ var fcup_upload = {
         jQuery.i2=0;//当前上传成功的序号
         jQuery.i3=1;//下片上传的序号
         jQuery.succeed = 0;
-        if (config.upId && config.upUrl) {
-            jQuery.domHtml = jQuery('#' + jQuery.upId).html();
-            jQuery.fcup_addFileInput();
+        if($("#upInputId").length<=0){
+            jQuery.fcup_addFileInput(jQuery.upType);
         }
-
     },
     fcup_limitFileSize: function (file, limitSize) {
         var arr = ["KB", "MB", "GB"],
@@ -67,20 +65,9 @@ var fcup_upload = {
         }
         return total <= 0 ? 0 : (Math.round(num / total * 10000) / 100.00);
     },
-    fcup_addFileInput: function () {
-        jQuery.upInputId = jQuery.upId + '_input';
-        var C = jQuery('#' + jQuery.upId).attr("class");
-        var X = jQuery('#' + jQuery.upId).position().top;
-        var Y = jQuery('#' + jQuery.upId).position().left;
-        var W = jQuery('#' + jQuery.upId).innerWidth();
-        var H = jQuery('#' + jQuery.upId).innerHeight();
-        var html = jQuery.domHtml;
-        if (C) {
-            html += '<input type="file" id="' + jQuery.upInputId + '" class="' + C + '" onchange="jQuery.fcup_upload(1,this)" project="' + jQuery.project + '" style="position:absolute;left:' + Y + 'px;top:' + X + 'px;opacity:0;z-index:9999;width:' + W + 'px;height:' + H + 'px;">';
-        } else {
-            html += '<input type="file" id="' + jQuery.upInputId + '" onchange="jQuery.fcup_upload(1,this)" project="' + jQuery.project + '"  style="position:absolute;left:' + Y + 'px;top:' + X + 'px;opacity:0;z-index:9999;width:' + W + 'px;height:' + H + 'px;">';
-        }
-        jQuery('#' + jQuery.upId).html(html);
+    fcup_addFileInput: function (upType) {
+        var html = '<input type="file" id="upInputId"  onchange="jQuery.fcup_upload(1,this)" project="' + jQuery.project + '" accept="' + upType + '" style="opacity:0">';
+        $("body").append(html);
     },
     fcup_upFileInput: function () {
         var X = jQuery('#' + jQuery.upId).position().top;
@@ -91,7 +78,7 @@ var fcup_upload = {
         obj.style.cssText = 'position:absolute;left:' + Y + 'px;top:' + X + 'px;opacity:0;z-index:9999;width:' + W + 'px;height:' + H + 'px;';
     },
     fcup_upload: function (source,element) {//source =1是新文件上传 source =“” 是分片文件上传
-        var upInputId =element.id;
+        // var upInputId =element.id;
         var project =$(element).attr("project");
         if(source==1){
             jQuery.i2=0;
@@ -99,7 +86,7 @@ var fcup_upload = {
         }
         jQuery.upError = '';
         jQuery.fileMD5 = '';
-        jQuery.tempFile = jQuery('#' + upInputId)[0].files[0];
+        jQuery.tempFile = jQuery('#upInputId')[0].files[0];
         jQuery.project = project;
         var file = jQuery.tempFile;
         if (!file) {

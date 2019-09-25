@@ -53,7 +53,7 @@ class IndexController extends Controller
             $fileUrl = $sys_protocal.$_SERVER['HTTP_HOST'] . '/upload/'.$fileName;
         }
         // 简单的判断文件类型
-        $imgarr = array('jpeg', 'jpg', 'png', 'gif', 'mp3','mp4', 'avi','flv','doc','xls','ppt','pdf');
+        $imgarr = array('jpeg', 'jpg', 'png', 'gif', 'mp3','mp4', 'avi','flv','mkv','doc','xls','ppt','pdf');
         if (!in_array($ext, $imgarr)) {
             return $this->result(array('status' => "0", 'msg' => '文件类型出错'))->json()->response();
         }
@@ -69,7 +69,7 @@ class IndexController extends Controller
             if ($is_exists){
                 if ($res == false || $res == -1){
                     $this->recordSpot($fileName,-1);
-                    return $this->result(array('status' => "3", 'msg' => '极速上传完成', 'url' => $fileUrl, 'finish_spot' => $total))->json()->response();
+                    return $this->result(array('status' => "3", 'msg' => '极速上传完成', 'url' => $fileUrl, 'finish_spot' => $total,'name'=>$name))->json()->response();
                 }
                 if ($res >= $index){
                     return $this->result(array('status' => "4", 'msg' => '正在计算上次上传进度', 'finish_spot'=>$res))->json()->response();
@@ -81,7 +81,7 @@ class IndexController extends Controller
                 // 片数相等，等于完成了
                 if ($index == $total) {
                     $this->recordSpot($fileName,-1);
-                    return $this->result(array('status' => "2", 'msg' => '上传完成', 'url' => $fileUrl))->json()->response();
+                    return $this->result(array('status' => "2", 'msg' => '上传完成', 'url' => $fileUrl,'name'=>$name))->json()->response();
                 }
                 $this->recordSpot($fileName,$index);
                 return $this->result(array('status' => "1", 'msg' => '正在上传'))->json()->response();
@@ -96,7 +96,7 @@ class IndexController extends Controller
                 // 片数相等，等于完成了
                 if ($index == $total) {
                     $this->recordSpot($fileName,-1);
-                    return $this->result(array('status' => "2", 'msg' => '上传完成', 'url' => $fileUrl))->json()->response();
+                    return $this->result(array('status' => "2", 'msg' => '上传完成', 'url' => $fileUrl,'name'=>$name))->json()->response();
                 }
                 $this->recordSpot($fileName,$index);
                 return $this->result(array('status' => "1", 'msg' => '正在上传'))->json()->response();

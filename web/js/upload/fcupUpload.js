@@ -7,7 +7,7 @@ var fcupUpload = {
     isStop:false,
     createHtml:function(serverUrl){
         if($(".upload-mask").length<=0){
-            $("body").before(' <link rel="stylesheet" href="'+serverUrl+'/css/upload/upload.css">');
+            $("body").before('<link rel="stylesheet" href="'+serverUrl+'/css/upload/upload.css">');
             var html = '<div class="upload-mask">';
             html +='<div class="upload-content uploading">';
             html +='<div class="tip-type">';
@@ -52,12 +52,11 @@ var fcupUpload = {
         $(".progress").css("width",0);
     },
 //    fc分片上传初始化
-    fcupInit:function (domId,upShardSize,upMaxSize,upType,serverUrl,project,fcupUploadCallback) {
+    fcupInit:function (upShardSize,upMaxSize,upType,serverUrl,project,fcupUploadCallback) {
         fcupUpload.createHtml(serverUrl);
         var upShardSize = upShardSize ==""?"2":upShardSize;
         $.getScript(serverUrl+"/js/upload/jquery.fcup.js",function(){
             $.fcup({
-                upId: domId, //上传dom的id
                 upShardSize: upShardSize, //切片大小,(单次上传最大值)单位M，默认2M
                 upMaxSize: upMaxSize, //上传文件大小,单位M，不设置不限制
                 upUrl: serverUrl+'/upload/index/upload', //文件上传接口
@@ -71,6 +70,8 @@ var fcupUpload = {
                     var msg = res.msg;
                     // url
                     var url = res.url + "?" + Math.random();
+                    //name
+                    var name = res.name;
 
                     // 接口返回错误
                     if (status == 0) {
@@ -84,14 +85,21 @@ var fcupUpload = {
                     }
                     // 已经完成了
                     if (status == 2) {
-                        //清空input的值
-                        fcupUploadCallback(url);
+                        var data={
+                            url:url,
+                            name:name
+                        };
+                        fcupUploadCallback(data);
                     }
                     // 已经存在提示极速上传完成
                     if (status == 3) {
                         this.i2 = res.finish_spot;
                         this.i3 = res.finish_spot;
-                        fcupUploadCallback(url);
+                        var data={
+                            url:url,
+                            name:name
+                        };
+                        fcupUploadCallback(data);
                     }
                     // 断点续传
                     if (status == 4) {
@@ -124,6 +132,9 @@ var fcupUpload = {
                     fcupUpload.uploading("0%");
                 }
             });
+            //清空file的值
+            $(" #upInputId").val("");
+            $("body #upInputId").trigger("click");
         });
 
     },
