@@ -152,9 +152,9 @@ var fcup_upload = {
         }
         const URL = jQuery.upUrl;
         var fcs = Array();
+        jQuery.support.cors = true;
         var xhr = new XMLHttpRequest();
         function ajaxStack(stack) {
-            jQuery.support.cors = true;
             if (jQuery.upStatus() == false) {
                 return;
             }
