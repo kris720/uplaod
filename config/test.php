@@ -16,4 +16,11 @@ return array(
         'port' => '6379'
     ),
 
+    'fileType'=>array(
+        'jpeg', 'jpg', 'png', 'gif',
+        'mp3',
+        'mp4', 'avi','flv','mkv',
+        'doc','xls','ppt','pdf'
+    )
+
 );

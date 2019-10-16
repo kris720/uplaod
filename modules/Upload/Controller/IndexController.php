@@ -58,7 +58,7 @@ class IndexController extends Controller
             $fileUrl = $sys_protocal.$_SERVER['HTTP_HOST'] . '/upload/'.$fileName;
         }
         // 简单的判断文件类型
-        $imgarr = array('jpeg', 'jpg', 'png', 'gif', 'mp3','mp4', 'avi','flv','mkv','doc','xls','ppt','pdf');
+        $imgarr = $this->getConfigValue("fileType");
         if (!in_array($ext, $imgarr)) {
             return $this->result(array('status' => "0", 'msg' => '文件类型出错'))->json()->response();
         }

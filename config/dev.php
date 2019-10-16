@@ -24,5 +24,12 @@ return array(
         'server' => array('127.0.0.1' => 4730)
     ),
 
+    'fileType'=>array(
+        'jpeg', 'jpg', 'png', 'gif',
+        'mp3',
+        'mp4', 'avi','flv','mkv',
+        'doc','xls','ppt','pdf'
+    )
+
 
 );

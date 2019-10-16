@@ -7,7 +7,7 @@ var fcupUpload = {
     isStop:false,
     createHtml:function(serverUrl){
         if($(".upload-mask").length<=0){
-            $("body").before('<link rel="stylesheet" href="'+serverUrl+'/css/upload/upload.css">');
+            $("body").before('<link rel="stylesheet" href="'+serverUrl+'/css/upload/upload.css"><script src="'+serverUrl+'/js/upload/jquery.fcup.js"></script>');
             var html = '<div class="upload-mask">';
             html +='<div class="upload-content uploading">';
             html +='<div class="tip-type">';
@@ -55,7 +55,7 @@ var fcupUpload = {
     fcupInit:function (upShardSize,upMaxSize,upType,serverUrl,project,fcupUploadCallback) {
         fcupUpload.createHtml(serverUrl);
         var upShardSize = upShardSize ==""?"2":upShardSize;
-        $.getScript(serverUrl+"/js/upload/jquery.fcup.js",function(){
+        // $.getScript(serverUrl+"/js/upload/jquery.fcup.js",function(){
             $.fcup({
                 upShardSize: upShardSize, //切片大小,(单次上传最大值)单位M，默认2M
                 upMaxSize: upMaxSize, //上传文件大小,单位M，不设置不限制
@@ -135,7 +135,7 @@ var fcupUpload = {
             //清空file的值
             $(" #upInputId").val("");
             $("body #upInputId").trigger("click");
-        });
+        // });
 
     },
     //事件绑定
