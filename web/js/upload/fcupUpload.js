@@ -155,8 +155,8 @@ var fcupUpload = {
     }
 };
 $(function () {
-    console.log(g_serverUrl);
-    fcupUpload.createHtml(g_serverUrl);
+    var serverUrl= $("#serverUrl").attr("serverUrl");
+    fcupUpload.createHtml(serverUrl);
 });
 
 
