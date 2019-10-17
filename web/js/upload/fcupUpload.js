@@ -3,9 +3,9 @@
  * @type {{createHtml: fcup_alert.createHtml, fcupInit: fcup_alert.fcupInit}}
  */
 ;
+var g_serverUrl ="";
 var fcupUpload = {
     isStop:false,
-    serverUrl:"",
     createHtml:function(serverUrl){
         if($(".upload-mask").length<=0){
             $("body").before('<link rel="stylesheet" href="'+serverUrl+'/css/upload/upload.css"><script src="'+serverUrl+'/js/upload/jquery.fcup.js"></script>');
@@ -54,7 +54,7 @@ var fcupUpload = {
     },
 //    fc分片上传初始化
     fcupInit:function (upShardSize,upMaxSize,upType,serverUrl,project,fcupUploadCallback) {
-        fcupUpload.serverUrl = serverUrl;
+        g_serverUrl = serverUrl;
         // fcupUpload.createHtml(serverUrl);
         var upShardSize = upShardSize ==""?"2":upShardSize;
         // $.getScript(serverUrl+"/js/upload/jquery.fcup.js",function(){
@@ -155,7 +155,8 @@ var fcupUpload = {
     }
 };
 $(function () {
-    fcupUpload.createHtml(fcupUpload.serverUrl);
+    console.log(g_serverUrl);
+    fcupUpload.createHtml(g_serverUrl);
 });
 
 
