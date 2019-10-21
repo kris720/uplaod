@@ -69,16 +69,133 @@ var fcup_upload = {
         var html = '<input type="file" id="upInputId"  onchange="jQuery.fcup_upload(1,this)" project="' + jQuery.project + '" accept="' + upType + '" style="opacity:0">';
         $("body").append(html);
     },
-    fcup_upFileInput: function () {
-        var X = jQuery('#' + jQuery.upId).position().top;
-        var Y = jQuery('#' + jQuery.upId).position().left;
-        var W = jQuery('#' + jQuery.upId).innerWidth();
-        var H = jQuery('#' + jQuery.upId).innerHeight();
-        var obj = document.getElementById(jQuery.upInputId);
-        obj.style.cssText = 'position:absolute;left:' + Y + 'px;top:' + X + 'px;opacity:0;z-index:9999;width:' + W + 'px;height:' + H + 'px;';
-    },
+
     fcup_upload: function (source,element) {//source =1是新文件上传 source =“” 是分片文件上传
-        // var upInputId =element.id;
+        //图片裁剪
+        if(element.files[0].type.indexOf('image')>=0){ //是图片
+            jQuery.main_id = $("#containers");
+            jQuery.tailoring_file(element);
+
+        }else{
+            jQuery.fc_upload_file(source,element);
+        }
+
+    },
+    getRoundedCanvas:function(sourceCanvas) {
+    var canvas = document.createElement('canvas');
+    var context = canvas.getContext('2d');
+    var width = sourceCanvas.width;
+    var height = sourceCanvas.height;
+
+    canvas.width = width;
+    canvas.height = height;
+    context.rect(0,0,width,height);
+    context.strokeStyle = 'rgba(0,0,0,0)';
+    context.stroke();
+    context.clip();
+    context.drawImage(sourceCanvas, 0, 0, width, height);
+
+    return canvas;
+},
+    ajax_post:function(_url,_data) {
+        $.ajax({
+            url: _url,
+            type: 'post',
+            async: true,
+            cache: false,
+            data: _data,
+            dataType: 'json',
+            success: function (data) {
+                if (typeof jQuery.upCallBack == 'function') {
+                    jQuery.upCallBack(data);
+                    jQuery.upEvent(100);
+                }
+            },
+            error: function (e) {
+                console.log('_ajax_post:error');
+                console.log(e);
+            }
+    });
+},
+    //图片裁剪上传
+    tailoring_file:function (element) {
+        jQuery.croppable_flag = false;
+        jQuery.imges ="";
+        var file = element.files[0];
+        if(window.createObjectURL != undefined) {
+            var url = window.createObjectURL(file)
+        }else if (window.URL != undefined) {
+            var url = window.URL.createObjectURL(file)
+        } else if (window.webkitURL != undefined) {
+            var url = window.webkitURL.createObjectURL(file)
+        };
+        var filename = file.name,
+            index1 = filename.lastIndexOf("."),
+            index2 = filename.length,
+            suffix = filename.substring(index1 + 1, index2);
+        if (jQuery.upType) {
+            var uptype = jQuery.upType.split(",");
+            if (jQuery.inArray(suffix, uptype) == -1) {
+                jQuery.upError = '不允许上传的文件类型-' + suffix;
+                jQuery.upStop(jQuery.upError);
+                return;
+            }
+        }
+        if (jQuery.upMaxSize) {
+            if (!jQuery.fcup_limitFileSize(file, jQuery.upMaxSize + 'MB')) {
+                jQuery.upError = '上传文件过大';
+                jQuery.upStop(jQuery.upError);
+                return;
+            }
+        }
+        jQuery.tailoring_file_name = element.files[0].name;
+        var spark = new SparkMD5.ArrayBuffer();
+        jQuery.tailoring_file_MD5 = spark.end();
+        $(".upload-content").hide();
+        $("#upload_box").show();
+        $(".upload-mask").show();
+        jQuery.main_id.empty();
+        jQuery.main_id.html('<div id="crop_area"><img src="'+url+'" style="width: 404px" id="upload_image"></div>');
+        jQuery.imges = $('#upload_image');
+        var options = {
+            aspectRatio: 4/3,
+            autoCropArea: 0,
+            viewMode: 0,
+            strict: false,
+            dragMode: 'move',
+            ready: function () {
+                jQuery.croppable_flag = true;
+            },
+            crop:function (data) {
+            }
+        };
+        jQuery.imges.cropper(options);
+        $("#sure").click(function () { //点击确认
+            if(jQuery.imges===''){
+                return;
+            }
+            var croppedCanvas;
+            var roundedCanvas;
+            if (!jQuery.croppable_flag) {
+                return;
+            }
+            croppedCanvas = jQuery.imges.cropper('getCroppedCanvas');
+            roundedCanvas = jQuery.getRoundedCanvas(croppedCanvas);
+            jQuery.upEvent(30);
+            var data={
+                images:roundedCanvas.toDataURL(),
+                file_name:jQuery.tailoring_file_name,
+                file_md5:jQuery.tailoring_file_MD5,
+                project:jQuery.project
+            };
+            jQuery.ajax_post(jQuery.tailoringUpUrl,data);
+            $(".upload-mask").hide();
+            $("#upload_box").hide();
+        });
+    },
+
+    //分片上传
+    fc_upload_file:function (source,element) {
         var project =$(element).attr("project");
         if(source==1){
             jQuery.i2=0;
@@ -120,6 +237,7 @@ var fcup_upload = {
                 window.clearInterval(md5taskid);
             }
         }, 100);
+
     },
     fcup_upload_core: function () {
         var file = jQuery.tempFile;
@@ -212,7 +330,7 @@ var fcup_upload = {
         }
         ajaxStack(re);
         re = null,
-            file = null;
+        file = null;
     },
     get_file_md5: function (file) {
         var blobSlice = File.prototype.slice || File.prototype.mozSlice || File.prototype.webkitSlice,
