@@ -82,21 +82,21 @@ var fcup_upload = {
 
     },
     getRoundedCanvas:function(sourceCanvas) {
-    var canvas = document.createElement('canvas');
-    var context = canvas.getContext('2d');
-    var width = sourceCanvas.width;
-    var height = sourceCanvas.height;
+        var canvas = document.createElement('canvas');
+        var context = canvas.getContext('2d');
+        var width = sourceCanvas.width;
+        var height = sourceCanvas.height;
 
-    canvas.width = width;
-    canvas.height = height;
-    context.rect(0,0,width,height);
-    context.strokeStyle = 'rgba(0,0,0,0)';
-    context.stroke();
-    context.clip();
-    context.drawImage(sourceCanvas, 0, 0, width, height);
+        canvas.width = width;
+        canvas.height = height;
+        context.rect(0,0,width,height);
+        context.strokeStyle = 'rgba(0,0,0,0)';
+        context.stroke();
+        context.clip();
+        context.drawImage(sourceCanvas, 0, 0, width, height);
 
-    return canvas;
-},
+        return canvas;
+    },
     ajax_post:function(_url,_data) {
         $.ajax({
             url: _url,
@@ -115,8 +115,8 @@ var fcup_upload = {
                 console.log('_ajax_post:error');
                 console.log(e);
             }
-    });
-},
+        });
+    },
     //图片裁剪上传
     tailoring_file:function (element) {
         jQuery.croppable_flag = false;
@@ -149,8 +149,6 @@ var fcup_upload = {
             }
         }
         jQuery.tailoring_file_name = element.files[0].name;
-        var spark = new SparkMD5.ArrayBuffer();
-        jQuery.tailoring_file_MD5 = spark.end();
         $(".upload-content").hide();
         $("#upload_box").show();
         $(".upload-mask").show();
@@ -170,28 +168,7 @@ var fcup_upload = {
             }
         };
         jQuery.imges.cropper(options);
-        $("#sure").click(function () { //点击确认
-            if(jQuery.imges===''){
-                return;
-            }
-            var croppedCanvas;
-            var roundedCanvas;
-            if (!jQuery.croppable_flag) {
-                return;
-            }
-            croppedCanvas = jQuery.imges.cropper('getCroppedCanvas');
-            roundedCanvas = jQuery.getRoundedCanvas(croppedCanvas);
-            jQuery.upEvent(30);
-            var data={
-                images:roundedCanvas.toDataURL(),
-                file_name:jQuery.tailoring_file_name,
-                file_md5:jQuery.tailoring_file_MD5,
-                project:jQuery.project
-            };
-            jQuery.ajax_post(jQuery.tailoringUpUrl,data);
-            $(".upload-mask").hide();
-            $("#upload_box").hide();
-        });
+        jQuery.get_file_md5(file);
     },
 
     //分片上传
@@ -330,7 +307,7 @@ var fcup_upload = {
         }
         ajaxStack(re);
         re = null,
-        file = null;
+            file = null;
     },
     get_file_md5: function (file) {
         var blobSlice = File.prototype.slice || File.prototype.mozSlice || File.prototype.webkitSlice,

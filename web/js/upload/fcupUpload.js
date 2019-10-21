@@ -159,11 +159,34 @@ var fcupUpload = {
             fcupUpload.isStop = true;
             fcupUpload.closeMask();
         });
+
         //裁剪取消
         $("#cancel").click(function () {
             $("#upInputId").val("");
             $(".upload-mask").hide();
             $("#upload_box").css('display',' none');
+        });
+        $("#sure").click(function () { //点击确认
+            if(jQuery.imges===''){
+                return;
+            }
+            var croppedCanvas;
+            var roundedCanvas;
+            if (!jQuery.croppable_flag) {
+                return;
+            }
+            croppedCanvas = jQuery.imges.cropper('getCroppedCanvas');
+            roundedCanvas = jQuery.getRoundedCanvas(croppedCanvas);
+            jQuery.upEvent(30);
+            var data={
+                images:roundedCanvas.toDataURL(),
+                file_name:jQuery.tailoring_file_name,
+                file_md5:jQuery.fileMD5,
+                project:jQuery.project
+            };
+            jQuery.ajax_post(jQuery.tailoringUpUrl,data);
+            $(".upload-mask").hide();
+            $("#upload_box").hide();
         });
     }
 };
