@@ -29,11 +29,11 @@ var fcupUpload = {
             html +='</div>';
             html +='</div>';
             html +='<div class="upload-content error" >';
-            html +='<div class="tip-txt-box">';
+            html +='<div class="tip-txt-box"><div class="fail-block"><span class="icon-fail"></span></div>';
             html +='<span class="tip-txt">上传失败</span>';
             html +='</div>';
             html +='<div class="upload-btn-block">';
-            html +='<span class="upload-btn gray-btn closeBtn gray-btn">知道了</span>';
+            html +='<span class="upload-btn gray-btn sureBtn color-btn">确定</span> <span class="upload-btn gray-btn closeBtn gray-btn">取消</span>';
             html +='</div>';
             html +='</div>';
             html +='</div>';
@@ -151,6 +151,11 @@ var fcupUpload = {
     bindEvent:function () {
         //关闭弹窗
         $("body").on("click",".closeBtn",function () {
+            fcupUpload.closeMask();
+        });
+
+        //点击确定
+        $("body").on("click",".sureBtn",function () {
             fcupUpload.closeMask();
         });
         //取消上传
