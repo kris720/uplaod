@@ -31,8 +31,7 @@ upload css
     background-color: rgba(0,0,0,0.5);
 }
 .upload-content{
-    width: 300px;
-    height: 200px;
+    width: 280px;
     background-color: #fff;
     border-radius: 2px;
     position: absolute;
@@ -81,6 +80,7 @@ upload css
 .upload-btn-block{
     margin-top: 20px;
     text-align: center;
+    margin-bottom: 10px;
 }
 .upload-btn{
     display: inline-block;
@@ -88,7 +88,7 @@ upload css
     height: 32px;
     line-height: 32px;
     background-color: #ddd;
-    color: #666;
+    color: #fff;
     text-align: center;
     border: 1px solid #ddd;
     border-radius: 4px;
@@ -101,12 +101,28 @@ upload css
 .upload-btn.gray-btn:hover{
     background-color: #cbcbcb;
 }
+.upload-btn.color-btn{
+    background-color: #4c81bf;
+}
+.upload-btn.color-btn:hover{
+    background-color: #3f78bf;
+}
 .tip-txt-box{
     text-align: center;
-    height: 100px;
-    padding-top: 40px;
+    padding-top: 20px;
     box-sizing: border-box;
 }
 .tip-txt{
     display: inline-block;
+}
+.fail-block{
+    margin-bottom: 10px;
+}
+.icon-fail{
+    display: inline-block;
+    width: 24px;
+    height: 24px;
+    background-image: url("/css/upload/img/fail.png");
+    background-repeat: no-repeat;
+    background-size: 100% 100%;
 }
